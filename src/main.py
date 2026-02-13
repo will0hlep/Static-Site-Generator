@@ -1,6 +1,6 @@
-from textnode import TextNode
+from textnode import TextNode, TextType
 
 def main():
-    print(TextNode('Hello World', "bold", None))
+    print(TextNode('Hello World', TextType.BOLD, None))
 
 main()

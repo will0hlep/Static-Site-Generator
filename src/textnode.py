@@ -1,18 +1,18 @@
 from enum import Enum
 
-class inline_text_type(Enum):
-    Heading = "heading"
-    Bold = "bold"
-    Italic = "italic"
-    Blockquote = "blockquote"
-    Code = "code"
-    Link = "link"
-    Image = "image"
+class TextType(Enum):
+    HEADING = "heading"
+    BOLD = "bold"
+    ITALIC = "italic"
+    BLOCKQUOTE = "blockquote"
+    CODE = "code"
+    LINK = "link"
+    IMAGE = "image"
 
 class TextNode():
     def __init__(self, TEXT, TEXT_TYPE, URL=None):
         self.text = TEXT
-        self.text_type = inline_text_type(TEXT_TYPE)
+        self.text_type = TextType(TEXT_TYPE)
         self.url = URL
 
     def __eq__(self, other):
