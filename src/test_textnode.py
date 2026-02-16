@@ -1,6 +1,6 @@
 import unittest
 
-from textnode import TextNode, TextType, text_node_to_html_node
+from textnode import TextNode, TextType, text_node_to_html_node, split_nodes_delimiter
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
@@ -47,6 +47,41 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(html_node3.value, "This is a text node")
         self.assertEqual(html_node4.value, "This is a text node")
         self.assertEqual(html_node5.value, None)
+
+    def test_split_nodes_delimiter(self):
+        node = TextNode("This is a **text** node", TextType.TEXT)
+        node1 = TextNode("This is a **text** node", TextType.BOLD)
+        node2 = TextNode("This is a _text_ node", TextType.TEXT)
+        node3 = TextNode("This is a `text` node", TextType.TEXT)
+
+        self.assertEqual(
+                         split_nodes_delimiter([node], '**', TextType.BOLD),
+                         [
+                          TextNode('This is a ', TextType.TEXT, None),
+                          TextNode('text', TextType.BOLD, None),
+                          TextNode(' node', TextType.TEXT, None)
+                          ]
+                         )
+        self.assertEqual(
+                         split_nodes_delimiter([node1], '**', TextType.BOLD),
+                         [node1]
+                         )
+        self.assertEqual(
+                         split_nodes_delimiter([node2], '_', TextType.ITALIC),
+                         [
+                          TextNode('This is a ', TextType.TEXT, None),
+                          TextNode('text', TextType.ITALIC, None),
+                          TextNode(' node', TextType.TEXT, None)
+                          ]
+                         )
+        self.assertEqual(
+                         split_nodes_delimiter([node3], '`', TextType.CODE),
+                         [
+                          TextNode('This is a ', TextType.TEXT, None),
+                          TextNode('text', TextType.CODE, None),
+                          TextNode(' node', TextType.TEXT, None)
+                          ]
+                         )
 
 if __name__ == "__main__":
     unittest.main()
