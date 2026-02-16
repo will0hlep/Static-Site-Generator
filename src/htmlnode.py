@@ -31,3 +31,16 @@ class LeafNode(HTMLNode):
         
     def __repr__(self):
         return f'TextNode({self.tag}, {self.value}, {self.props})'
+    
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props = None):
+        super().__init__(tag, None, children, props)
+
+    def to_html(self):
+        if self.children is None or self.children == []:
+            raise ValueError('you must have kids')
+        html_script = f'<{self.tag}>'
+        for child in self.children:
+            html_script += child.to_html()
+        html_script += f'</{self.tag}>'
+        return html_script
