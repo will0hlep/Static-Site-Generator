@@ -1,5 +1,7 @@
 from enum import Enum
 from htmlnode import HTMLNode, LeafNode, ParentNode
+import re
+
 
 class TextType(Enum):
     TEXT = "text"
@@ -8,6 +10,7 @@ class TextType(Enum):
     CODE = "code"
     LINK = "link"
     IMAGE = "image"
+
 
 class TextNode():
     def __init__(self, TEXT, TEXT_TYPE, URL=None):
@@ -24,6 +27,7 @@ class TextNode():
     
     def __repr__(self):
         return f'TextNode({self.text}, {self.text_type.value}, {self.url})'
+
 
 def text_node_to_html_node(text_node):
     match text_node.text_type:
@@ -66,3 +70,11 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
         else:
             output_nodes.append(node)
     return output_nodes
+
+
+def extract_markdown_images(text):
+    return re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+
+def extract_markdown_links(text):
+    return re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+
