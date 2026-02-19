@@ -26,4 +26,5 @@ def static_to_public_copy_routine(path):
         else:
             static_to_public_copy_routine(passed_file_path)
 
+
 main()
