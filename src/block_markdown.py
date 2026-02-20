@@ -60,17 +60,17 @@ def block_stripper(blocktype, block):
             i = 0
             while block[i] == '#':
                 i += 1
-            return block[i:] , i
+            return block[i + 1:] , i
         case blocktype.code:
             return block[4:-3], None
         case blocktype.quote:
-            blocks = []
+            '''blocks = []
             lines = block.split('>')
             for line in lines:
-                blocks.append(line.strip())
-            return blocks, None
+                blocks.append(line.strip())'''
+            return block.replace('> ','\n').replace('>','\n'), None
         case blocktype.unordered_list:
-            return block.split('- '), None
+            return block.split('- ')[1:], None
         case blocktype.ordered_list:
             blocks = []
             i = 1
@@ -92,17 +92,17 @@ def text_to_children(text):
 def blocktype_to_node(blocktype, text, depth):
     match blocktype:
         case blocktype.paragraph:
-            return ParentNode('p', text_to_children(text))
+            return ParentNode('p', text_to_children(text.strip('\n')))
         case blocktype.heading:
-            return ParentNode(f'h{depth}', text_to_children(text))
+            return ParentNode(f'h{depth}', text_to_children(text.strip('\n')))
         case blocktype.code:
-            return ParentNode('pre', [LeafNode('code', text)])
+            return ParentNode('pre', [LeafNode('code', text.strip('\n'))])
         case blocktype.quote:
-            return LeafNode('blockquote', text_to_children(text))
+            return LeafNode('blockquote', text.strip('\n'))
         case blocktype.unordered_list:
-            return ParentNode('ul', [ParentNode('li', text_to_children(line)) for line in text])
+            return ParentNode('ul', [ParentNode('li', text_to_children(line.strip('\n'))) for line in text])
         case blocktype.ordered_list:
-            return ParentNode('ol', [ParentNode('li', text_to_children(line)) for line in text])
+            return ParentNode('ol', [ParentNode('li', text_to_children(line.strip('\n'))) for line in text])
 
 
 def markdown_to_html_node(markdown):
