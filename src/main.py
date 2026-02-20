@@ -2,16 +2,30 @@ import os
 import shutil
 from block_markdown import markdown_to_html_node
 from htmlnode import HTMLNode, ParentNode, LeafNode
+from pathlib import Path
 
 
 def main():
     static_to_public()
-    generate_page('content/index.md', 'template.html', 'public/index.html')
+    generate_pages_recursive('content', 'template.html', 'public')
+    return None
+
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for file in os.listdir(dir_path_content):
+        contnet_path = os.path.join(dir_path_content, file)
+        public_path = Path(os.path.join(dest_dir_path, file))
+        if os.path.isfile(contnet_path):
+            generate_page(contnet_path, template_path, public_path.with_suffix('.html'))
+        else:
+            generate_pages_recursive(contnet_path, template_path, public_path)
     return None
 
 
 def static_to_public():
-    shutil.rmtree('public')
+    if os.path.exists('public'):
+        shutil.rmtree('public')
+    os.makedirs('public')
         
     def static_to_public_copy_routine(path):
         static_path = os.path.join('static', path)
